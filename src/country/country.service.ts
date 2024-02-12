@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Country, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -31,6 +31,12 @@ export class CountryService {
   }
 
   async deleteCountry(id: number): Promise<Country> {
+    const data = await this.prisma.country.findUnique({
+      where: { id },
+    });
+
+    if (!data) throw new HttpException("There's no category with id " + id, HttpStatus.NOT_FOUND);
+
     return this.prisma.country.delete({
       where: { id }
     });

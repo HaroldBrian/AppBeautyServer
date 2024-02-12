@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsEmail, IsNotEmpty } from 'class-validator';
 
 export class LoginDto {
   @ApiProperty()
@@ -19,6 +19,7 @@ export class SignupDto {
 
   @IsNotEmpty()
   @ApiProperty()
+  @IsEmail()
   email: string;
 
   @IsNotEmpty()

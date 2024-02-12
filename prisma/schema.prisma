@@ -30,21 +30,57 @@ model Town {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String
-  surname   String?
-  password  String
-  telephone String   @unique
-  address   String?
-  role      Role     @default(CLIENT)
-  status    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  id          Int       @id @default(autoincrement())
+  email       String    @unique
+  name        String
+  surname     String?
+  password    String
+  telephone   String    @unique
+  address     String?
+  logo        String?
+  description String?
+  role        Role      @default(CLIENT)
+  status      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  services    Service[]
 }
 
 enum Role {
   ADMIN
   PROVIDER
   CLIENT
+}
+
+model ProductCategory {
+  id          Int      @id @default(autoincrement())
+  label       String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+}
+
+model ServiceCategory {
+  id          Int       @id @default(autoincrement())
+  label       String    @unique
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  services    Service[]
+}
+
+model Service {
+  id          Int             @id @default(autoincrement())
+  label       String
+  description String?
+  time        Int
+  amount      Int
+  discount    Int?
+  images      String?
+  caretype    ServiceCategory @relation(fields: [categoryId], references: [id])
+  categoryId  Int
+  user        User            @relation(fields: [userId], references: [id])
+  userId      Int
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now()) @updatedAt
 }

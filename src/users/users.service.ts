@@ -143,4 +143,63 @@ export class UsersService {
       },
     });
   }
+
+  // get all users
+  async getUsers(){
+    return await this.prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        surname: true,
+        telephone: true,
+        role: true
+      }
+    })
+  }
+
+  // get all clients
+  async getClients(){
+    return await this.prisma.user.findMany({
+      where: { role: 'CLIENT'},
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        surname: true,
+        telephone: true,
+        role: true
+      }
+    })
+  }
+
+  // get all providers
+  async getProviders(){
+    return await this.prisma.user.findMany({
+      where: { role: 'PROVIDER'},
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        surname: true,
+        telephone: true,
+        role: true
+      }
+    })
+  }
+
+  // get all admin
+  async getAdmins(){
+    return await this.prisma.user.findMany({
+      where: { role: 'ADMIN'},
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        surname: true,
+        telephone: true,
+        role: true
+      }
+    })
+  }
 }
