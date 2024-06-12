@@ -1,9 +1,13 @@
+import { mailSender } from './../../utils/mailSender';
 /* eslint-disable prettier/prettier */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { compare, hash } from 'bcrypt';
+import * as otpGenerator from 'otp-generator';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { LoginDto, SignupDto, UpdatePasswordDto } from './users.dto';
+import { LoginDto, SignupDto, UpdatePasswordDto, VerifyOtpDto } from './users.dto';
+import * as fs from 'fs';
+import * as path from 'path';
 
 interface FormatLogin extends Partial<User> {
   email: string;
@@ -93,13 +97,60 @@ export class UsersService {
       );
     }
 
-    return await this.prisma.user.create({
+    // We generate our otp and send our mail
+    const otp = otpGenerator.generate(4, {
+      upperCaseAlphabets: false,
+      lowerCaseAlphabets: false,
+      specialChars: false,
+    });
+
+    const user = await this.prisma.user.create({
       data: {
         ...userDto,
         role: 'CLIENT' as const,
+        status: false,
         password: await hash(userDto.password, 10),
+        otp,
       },
     });
+
+    const templatePath = path.resolve(__dirname, '..', '..', '..', 'src', 'templates', 'otp-template.html');
+    let template = fs.readFileSync(templatePath, 'utf8');
+    template = template.replace('{{OTP_CODE}}', otp);
+    await mailSender(userDto.email, 'Code de confirmation', template);
+
+    return user;
+  }
+
+  // verify user OTP token
+  async verifyOtp(verifyOtpDto: VerifyOtpDto): Promise<any> {
+    const { email, otp } = verifyOtpDto;
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    if (user.otp !== otp) {
+      throw new HttpException('Invalid OTP', HttpStatus.BAD_REQUEST);
+    }
+
+    await this.prisma.user.update({
+      where: { email },
+      data: {
+        otp: null,
+        status: true,
+      },
+    });
+
+    const templatePath = path.resolve(__dirname, '..', '..', '..', 'src', 'templates', 'verification-success.html');
+    let template = fs.readFileSync(templatePath, 'utf8');
+    
+    await mailSender(email, 'Bienvenue', template);
+
+    return { message: 'OTP verified successfully' };
   }
 
   // login functionality
@@ -145,7 +196,7 @@ export class UsersService {
   }
 
   // get all users
-  async getUsers(){
+  async getUsers() {
     return await this.prisma.user.findMany({
       select: {
         id: true,
@@ -153,53 +204,53 @@ export class UsersService {
         email: true,
         surname: true,
         telephone: true,
-        role: true
-      }
-    })
+        role: true,
+      },
+    });
   }
 
   // get all clients
-  async getClients(){
+  async getClients() {
     return await this.prisma.user.findMany({
-      where: { role: 'CLIENT'},
+      where: { role: 'CLIENT' },
       select: {
         id: true,
         name: true,
         email: true,
         surname: true,
         telephone: true,
-        role: true
-      }
-    })
+        role: true,
+      },
+    });
   }
 
   // get all providers
-  async getProviders(){
+  async getProviders() {
     return await this.prisma.user.findMany({
-      where: { role: 'PROVIDER'},
+      where: { role: 'PROVIDER' },
       select: {
         id: true,
         name: true,
         email: true,
         surname: true,
         telephone: true,
-        role: true
-      }
-    })
+        role: true,
+      },
+    });
   }
 
   // get all admin
-  async getAdmins(){
+  async getAdmins() {
     return await this.prisma.user.findMany({
-      where: { role: 'ADMIN'},
+      where: { role: 'ADMIN' },
       select: {
         id: true,
         name: true,
         email: true,
         surname: true,
         telephone: true,
-        role: true
-      }
-    })
+        role: true,
+      },
+    });
   }
 }

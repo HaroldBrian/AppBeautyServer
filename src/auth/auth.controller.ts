@@ -1,3 +1,4 @@
+import { UsersService } from './../users/users.service';
 /* eslint-disable prettier/prettier */
 import {
     Body,
@@ -7,13 +8,17 @@ import {
     Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { LoginDto, SignupDto } from 'src/users/users.dto';
+import { LoginDto, SignupDto, VerifyOtpDto } from 'src/users/users.dto';
 import { AuthService, RegistrationStatus } from './auth.service';
 
 @ApiTags('Authentication flow')
 @Controller('api/v1/auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UsersService,
+
+  ) {}
 
   @Post('signup/admin')
   public async registerAdmin(
@@ -54,5 +59,10 @@ export class AuthController {
   @Post('login')
   public async login(@Body() loginDto: LoginDto): Promise<any> {
     return await this.authService.login(loginDto);
+  }
+
+  @Post('verify-otp')
+  public async verifyOtp(@Body() verifyOtpDto: VerifyOtpDto): Promise<any> {
+    return await this.userService.verifyOtp(verifyOtpDto);
   }
 }

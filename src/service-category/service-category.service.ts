@@ -5,7 +5,7 @@ import { CreateServiceCategoryDto, UpdateServiceCategoryDto } from './dto';
 
 @Injectable()
 export class ServiceCategoryService {
-    constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) {}
 
   async findAll() {
     return this.prisma.serviceCategory.findMany();
@@ -16,7 +16,9 @@ export class ServiceCategoryService {
   }
 
   async create(data: CreateServiceCategoryDto) {
-    return this.prisma.serviceCategory.create({ data });
+    console.log('Data is: ', data);
+
+    return this.prisma.serviceCategory.create({ data: { ...data} });
   }
 
   async update(id: number, data: UpdateServiceCategoryDto) {
@@ -28,7 +30,11 @@ export class ServiceCategoryService {
       where: { id },
     });
 
-    if (!data) throw new HttpException("There's no category with id " + id, HttpStatus.NOT_FOUND);
+    if (!data)
+      throw new HttpException(
+        "There's no category with id " + id,
+        HttpStatus.NOT_FOUND,
+      );
 
     return this.prisma.serviceCategory.delete({ where: { id } });
   }
