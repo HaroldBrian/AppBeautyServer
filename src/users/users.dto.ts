@@ -40,8 +40,3 @@ export class UpdatePasswordDto {
   @ApiProperty()
   old_password: string;
 }
-
-export class VerifyOtpDto {
-  email: string;
-  otp: string;
-}

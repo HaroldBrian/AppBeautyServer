@@ -1,14 +1,15 @@
 import { UsersService } from './../users/users.service';
 /* eslint-disable prettier/prettier */
 import {
-    Body,
-    Controller,
-    HttpException,
-    HttpStatus,
-    Post,
+  Body,
+  Controller,
+  HttpException,
+  HttpStatus,
+  Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { LoginDto, SignupDto, VerifyOtpDto } from 'src/users/users.dto';
+import { LoginDto, SignupDto } from 'src/users/users.dto';
+import { ForgotPasswordDto, ResetPasswordDto, VerifyOtpDto } from './auth.dto';
 import { AuthService, RegistrationStatus } from './auth.service';
 
 @ApiTags('Authentication flow')
@@ -16,7 +17,6 @@ import { AuthService, RegistrationStatus } from './auth.service';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly userService: UsersService,
 
   ) {}
 
@@ -61,8 +61,23 @@ export class AuthController {
     return await this.authService.login(loginDto);
   }
 
-  @Post('verify-otp')
+  @Post('signup-otp')
   public async verifyOtp(@Body() verifyOtpDto: VerifyOtpDto): Promise<any> {
-    return await this.userService.verifyOtp(verifyOtpDto);
+    return await this.authService.verifyOtp(verifyOtpDto);
+  }
+
+  @Post('forgot-password')
+  public async forgotPassword(@Body() data: ForgotPasswordDto): Promise<any> {
+    return await this.authService.forgotPassword(data.email);
+  }
+
+  @Post('password-otp')
+  public async verifyForgotPasswordOtp(@Body() data: VerifyOtpDto): Promise<any> {
+    return await this.authService.verifyForgotPasswordOtp(data.email, data.otp);
+  }
+
+  @Post('reset-password')
+  public async resetPassword(@Body() data: ResetPasswordDto): Promise<any> {
+    return await this.authService.resetPassword(data.email, data.newPassword);
   }
 }

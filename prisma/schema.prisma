@@ -30,21 +30,23 @@ model Town {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  email       String    @unique
-  name        String
-  surname     String?
-  password    String
-  telephone   String?   @unique
-  address     String?
-  logo        String?
-  description String?
-  otp         String?
-  role        Role      @default(CLIENT)
-  status      Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now()) @updatedAt
-  services    Service[]
+  id                   Int       @id @default(autoincrement())
+  email                String    @unique
+  name                 String
+  surname              String?
+  password             String
+  telephone            String?   @unique
+  address              String?
+  logo                 String?
+  description          String?
+  otp                  String?
+  resetPasswordOtp     String?
+  resetPasswordExpires DateTime?
+  role                 Role      @default(CLIENT)
+  status               Boolean   @default(false)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @default(now()) @updatedAt
+  services             Service[]
 }
 
 enum Role {
