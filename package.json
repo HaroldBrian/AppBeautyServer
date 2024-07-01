@@ -17,7 +17,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "ngrok": "NGROK_AUTHTOKEN=2cimPCy616IG6VDV3Dnbhhcxy5U_2ui7qQjeqtnKJ8N9qCrmW node src/main.ts"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.0.2",
@@ -27,6 +28,7 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.3.2",
     "@nestjs/swagger": "^7.2.0",
+    "@ngrok/ngrok": "^1.3.0",
     "@prisma/client": "^5.8.1",
     "@types/multer": "^1.4.11",
     "@types/passport-jwt": "^4.0.1",
