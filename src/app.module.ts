@@ -5,14 +5,27 @@ import { AuthModule } from './auth/auth.module';
 import { CountryModule } from './country/country.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PrismaService } from './prisma/prisma.service';
-import { UsersModule } from './users/users.module';
-import { TownsModule } from './towns/towns.module';
 import { ProductCategoryModule } from './product-category/product-category.module';
+import { ProductModule } from './product/product.module';
 import { ServiceCategoryModule } from './service-category/service-category.module';
 import { ServiceModule } from './service/service.module';
+import { ShopModule } from './shop/shop.module';
+import { TownsModule } from './towns/towns.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, PrismaModule, CountryModule, TownsModule, ProductCategoryModule, ServiceCategoryModule, ServiceModule],
+  imports: [
+    AuthModule,
+    UsersModule,
+    PrismaModule,
+    CountryModule,
+    TownsModule,
+    ProductCategoryModule,
+    ServiceCategoryModule,
+    ServiceModule,
+    ShopModule,
+    ProductModule,
+  ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

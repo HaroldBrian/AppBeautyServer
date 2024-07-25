@@ -2,16 +2,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
+import { compare, hash } from 'bcrypt';
 import * as fs from 'fs';
 import * as otpGenerator from 'otp-generator';
 import * as path from 'path';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoginDto, SignupDto } from 'src/users/users.dto';
 import { mailSender } from 'utils/mailSender';
-import { UsersService } from '../users/users.service';
 import { VerifyOtpDto } from './auth.dto';
 import { JwtPayload } from './jwt.strategy';
-import { compare, hash } from 'bcrypt';
 
 interface FormatLogin extends Partial<User> {
   email: string;

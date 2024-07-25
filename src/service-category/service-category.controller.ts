@@ -14,7 +14,6 @@ import { ServiceCategoryService } from './service-category.service';
 
 @ApiTags('Service Categories Management')
 @Controller('api/v1/service-category')
-@Controller('service-category')
 export class ServiceCategoryController {
   constructor(
     private readonly serviceCategoryService: ServiceCategoryService,
