@@ -3,8 +3,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { compare, hash } from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdatePasswordDto } from './users.dto';
-
+import { UpdatePasswordDto, UpdateProfileDto } from './users.dto';
 
 @Injectable()
 export class UsersService {
@@ -15,7 +14,7 @@ export class UsersService {
     const user = await this.prisma.user.findUnique({ where: { id } });
 
     if (!user) {
-      throw new HttpException('invalid credentials', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
     }
 
     // compare password
@@ -27,6 +26,23 @@ export class UsersService {
     return await this.prisma.user.update({
       where: { id },
       data: { password: await hash(payload.new_password, 10) },
+    });
+  }
+
+  // update profile informations
+  async updateProfile(
+    id: number,
+    updateProfileDto: UpdateProfileDto,
+  ): Promise<User> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    return await this.prisma.user.update({
+      where: { id },
+      data: updateProfileDto,
     });
   }
 
