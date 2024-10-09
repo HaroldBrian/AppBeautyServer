@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { PartialType } from '@nestjs/mapped-types';
-import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsOptional } from "class-validator";
 
 export class CreateServiceCategoryDto {
     // @IsNotEmpty()
