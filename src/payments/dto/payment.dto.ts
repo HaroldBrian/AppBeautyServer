@@ -16,3 +16,10 @@ export interface CompletePaymentDto {
   channel: string;
   phone: string;
 }
+
+export interface CreatePaymentDto {
+  subscriptionId: number;
+  amount: number;
+  paymentDate?: Date;
+  status?: string;
+}

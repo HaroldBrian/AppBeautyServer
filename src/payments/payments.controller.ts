@@ -3,7 +3,6 @@ import { ApiTags } from '@nestjs/swagger';
 import {
   CompletePaymentDto,
   InitiatePaymentDto,
-  ReferencePaymentDto,
 } from './dto/payment.dto';
 import { PaymentsService } from './payments.service';
 

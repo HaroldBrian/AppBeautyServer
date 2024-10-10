@@ -3,7 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CountryModule } from './country/country.module';
-import { PaymentsModule } from './payments/payments.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PrismaService } from './prisma/prisma.service';
 import { ProductCategoryModule } from './product-category/product-category.module';
@@ -14,6 +13,8 @@ import { ShopModule } from './shop/shop.module';
 import { TownsModule } from './towns/towns.module';
 import { UsersModule } from './users/users.module';
 import { SubscriptionPlanModule } from './subscription-plan/subscription-plan.module';
+import { SubscriptionModule } from './subscription/subscription.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { SubscriptionPlanModule } from './subscription-plan/subscription-plan.mo
     ProductModule,
     PaymentsModule,
     SubscriptionPlanModule,
+    SubscriptionModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

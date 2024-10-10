@@ -1,10 +1,18 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { CompletePaymentDto, InitiatePaymentDto } from './dto/payment.dto';
+import {
+  CompletePaymentDto,
+  CreatePaymentDto,
+  InitiatePaymentDto,
+} from './dto/payment.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class PaymentsService {
   private readonly apiUrl = 'https://api.notchpay.co';
+  constructor(
+    private readonly prisma: PrismaService,
+  ) {}
 
   async initializePayment({ amount, email, phone }: InitiatePaymentDto) {
     const options = {
@@ -36,6 +44,10 @@ export class PaymentsService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  async createPaymentRow(data: CreatePaymentDto) {
+    return await this.prisma.payment.create({ data: { ...data } });
   }
 
   async verifyAndFetchPayment(reference: string) {
