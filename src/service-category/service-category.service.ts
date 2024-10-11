@@ -16,8 +16,6 @@ export class ServiceCategoryService {
   }
 
   async create(data: CreateServiceCategoryDto) {
-    console.log('Data is: ', data);
-
     return this.prisma.serviceCategory.create({ data: { ...data} });
   }
 
