@@ -40,6 +40,7 @@ export class SubscriptionService {
         email: user.email,
         phone: user.telephone,
       });
+
       if (!payment) {
         throw new HttpException('The payment could not be initialized', HttpStatus.INTERNAL_SERVER_ERROR) 
       }
@@ -52,7 +53,7 @@ export class SubscriptionService {
           endDate: new Date(
             Date.now() + subscriptionPlan.duration * 24 * 60 * 60 * 1000,
           ),
-          status: 'active',
+          status: 'pending',
         },
       });
 
