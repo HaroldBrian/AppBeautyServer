@@ -1,13 +1,22 @@
+import { IsNotEmpty, IsOptional } from 'class-validator';
+
 export class CreateShopDto {
-    code: string;
-    name: string;
-    description: string;
-    location: string;
-    phoneNumber: string;
-    logo: string;
-    website?: string;
-    socialNetworks: string[];
-    images: string[];
-    status: string;
-    serviceId?: number;
-  }
+  code: string;
+  name: string;
+  @IsOptional()
+  description?: string;
+  @IsOptional()
+  location?: string;
+  phoneNumber: string;
+  @IsOptional()
+  logo?: string;
+  @IsOptional()
+  website?: string;
+  socialNetworks: string[];
+  @IsOptional()
+  images?: string[];
+  @IsOptional()
+  status?: string;
+  @IsNotEmpty()
+  userId: number;
+}
