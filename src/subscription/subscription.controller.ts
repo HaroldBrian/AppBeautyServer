@@ -14,7 +14,7 @@ import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Subscription Service')
-@Controller('subscriptions')
+@Controller('api/v1/subscriptions')
 export class SubscriptionController {
   constructor(private readonly subscriptionService: SubscriptionService) {}
 

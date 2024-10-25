@@ -29,8 +29,8 @@ export class ShopService {
       data: {
         ...shopData,
         code: uniqueCode,
-        socialNetworks: socialNetworks.map((url) => ({ url })),
-        images: images.map((url) => ({ url })),
+        socialNetworks: socialNetworks.map((url) => ({ url })) ||  undefined,
+        images: images.map((url) => ({ url })) || undefined,
       },
     });
     return shop;

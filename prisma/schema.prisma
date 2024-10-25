@@ -49,6 +49,7 @@ model User {
   services             Service[]
 
   Subscription Subscription[]
+  Shop         Shop[]
 }
 
 enum Role {
@@ -80,16 +81,18 @@ model Shop {
   id             Int       @id @default(autoincrement())
   code           String
   name           String
-  description    String
-  location       String
+  description    String?
+  location       String?
   phoneNumber    String
-  logo           String
+  logo           String?
   website        String?
-  status         String
+  status         String?
   services       Service[]
-  socialNetworks Json
-  images         Json
+  socialNetworks Json?
+  images         Json?
   Product        Product[]
+  userId         Int
+  user           User      @relation(fields: [userId], references: [id])
 }
 
 model Service {
