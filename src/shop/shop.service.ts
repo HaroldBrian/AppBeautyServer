@@ -52,6 +52,16 @@ export class ShopService {
     });
   }
 
+  async findUserShops(userId: number){
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    const shops = await this.prisma.shop.findMany({ where: { userId: user.id }})
+    return shops;
+  }
+
   async update(id: number, updateShopDto: UpdateShopDto) {
     const item = await this.prisma.shop.findUnique({ where: { id } });
 
