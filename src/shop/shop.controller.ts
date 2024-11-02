@@ -24,6 +24,11 @@ export class ShopController {
     return this.shopService.findOne(+id);
   }
 
+  @Get(':id')
+  findUserShops(@Param('id') id: string) {
+    return this.shopService.findUserShops(+id);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateShopDto: UpdateShopDto) {
     return this.shopService.update(+id, updateShopDto);
