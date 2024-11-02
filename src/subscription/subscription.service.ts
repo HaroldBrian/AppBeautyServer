@@ -61,9 +61,27 @@ export class SubscriptionService {
     } catch (error) {}
   }
 
+  async findOne(id: number) {
+    const subscription = await this.prisma.subscription.findUnique({ where: { id } });
+
+    if (!subscription) {
+      throw new HttpException('subscription not found', HttpStatus.NOT_FOUND);
+    }
+
+    return this.prisma.subscription.findUnique({
+      where: { id },
+    });
+  }
+
   async getSubscriptionsByUser(userId: number) {
+
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    
     const subscriptions = await this.prisma.subscription.findMany({
-      where: { userId },
+      where: { userId: user.id },
     });
 
     if (!subscriptions) {

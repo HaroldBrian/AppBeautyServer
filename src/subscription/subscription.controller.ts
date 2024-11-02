@@ -29,9 +29,14 @@ export class SubscriptionController {
     );
   }
 
-  @Get()
-  async getUserSubscriptions(@Param('id', ParseIntPipe) id: number) {
-    return await this.subscriptionService.getSubscriptionsByUser(id);
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.subscriptionService.findOne(+id);
+  }
+
+  @Get(':id')
+  async getUserSubscriptions(@Param('id') id: string) {
+    return await this.subscriptionService.getSubscriptionsByUser(+id);
   }
 
   @Patch(':id')
