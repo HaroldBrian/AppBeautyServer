@@ -29,14 +29,19 @@ export class SubscriptionController {
     );
   }
 
+  @Get()
+  findAll() {
+    return this.subscriptionService.findAll();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.subscriptionService.findOne(+id);
   }
 
   @Get(':id')
-  async getUserSubscriptions(@Param('id') id: string) {
-    return await this.subscriptionService.getSubscriptionsByUser(+id);
+  getUserSubscriptions(@Param('id') id: string) {
+    return this.subscriptionService.getSubscriptionsByUser(+id);
   }
 
   @Patch(':id')

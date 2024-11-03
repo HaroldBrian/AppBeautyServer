@@ -61,6 +61,10 @@ export class SubscriptionService {
     } catch (error) {}
   }
 
+  async findAll() {
+    return this.prisma.subscription.findMany({});
+  }
+
   async findOne(id: number) {
     const subscription = await this.prisma.subscription.findUnique({ where: { id } });
 
