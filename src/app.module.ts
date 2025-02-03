@@ -15,6 +15,8 @@ import { UsersModule } from './users/users.module';
 import { SubscriptionPlanModule } from './subscription-plan/subscription-plan.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { PaymentsModule } from './payments/payments.module';
+import { MeetModule } from './meet/meet.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { PaymentsModule } from './payments/payments.module';
     PaymentsModule,
     SubscriptionPlanModule,
     SubscriptionModule,
+    MeetModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
