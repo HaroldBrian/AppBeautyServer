@@ -23,7 +23,7 @@ export class OrderController {
   }
 
   @Get('user/:userId')
-  findByUserId(@Param('userId') userId: string) {
+  findByUserId(@Param('userId') userId: number) {
     return this.orderService.findByUserId(userId);
   }
 

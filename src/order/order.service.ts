@@ -10,7 +10,6 @@ export class OrderService {
     return this.prisma.order.create({
       data: {
         ...createOrderDto,
-        date: new Date(createOrderDto.date),
       },
     });
   }
@@ -25,7 +24,7 @@ export class OrderService {
     });
   }
 
-  findByUserId(userId: string) {
+  findByUserId(userId: number) {
     return this.prisma.order.findMany({
       where: { userId },
     });

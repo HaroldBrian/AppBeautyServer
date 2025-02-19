@@ -1,7 +1,9 @@
+
 export class CreateOrderDto {
-  userId: string;
-  productId: string;
+  userId: number;
+  productId: number;
   quantity: number;
-  date: Date;
+  totalAmount: number; 
+  status: string;
   reference: string;
 }
