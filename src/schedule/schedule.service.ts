@@ -16,20 +16,20 @@ export class ScheduleService {
     return this.prisma.schedule.findMany();
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return this.prisma.schedule.findUnique({
       where: { id },
     });
   }
 
-  update(id: string, updateScheduleDto: CreateScheduleDto) {
+  update(id: number, updateScheduleDto: CreateScheduleDto) {
     return this.prisma.schedule.update({
       where: { id },
       data: updateScheduleDto,
     });
   }
 
-  remove(id: string) {
+  remove(id: number) {
     return this.prisma.schedule.delete({
       where: { id },
     });

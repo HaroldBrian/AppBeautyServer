@@ -1,5 +1,7 @@
 export class CreateScheduleDto {
-  date: Date;
-  time: string;
-  meetId: string;
+  event: string;
+  start_date: Date;
+  end_date: Date;
 }
+
+

@@ -17,17 +17,17 @@ export class ScheduleController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.scheduleService.findOne(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateScheduleDto: CreateScheduleDto) {
+  update(@Param('id') id: number, @Body() updateScheduleDto: CreateScheduleDto) {
     return this.scheduleService.update(id, updateScheduleDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.scheduleService.remove(id);
   }
 }

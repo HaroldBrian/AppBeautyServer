@@ -16,20 +16,20 @@ export class RatingService {
     return this.prisma.rating.findMany();
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return this.prisma.rating.findUnique({
       where: { id },
     });
   }
 
-  update(id: string, updateRatingDto: CreateRatingDto) {
+  update(id: number, updateRatingDto: CreateRatingDto) {
     return this.prisma.rating.update({
       where: { id },
       data: updateRatingDto,
     });
   }
 
-  remove(id: string) {
+  remove(id: number) {
     return this.prisma.rating.delete({
       where: { id },
     });
