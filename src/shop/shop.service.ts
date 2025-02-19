@@ -38,7 +38,7 @@ export class ShopService {
 
   async findAll() {
     return this.prisma.shop.findMany({});
-  }
+  }  
 
   async findOne(id: number) {
     const shop = await this.prisma.shop.findUnique({ where: { id } });
