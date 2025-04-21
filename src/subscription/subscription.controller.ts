@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { SubscriptionService } from './subscription.service';
 import { CreateSubscriptionDto } from './dto/create-subscription.dto';
@@ -21,10 +22,8 @@ export class SubscriptionController {
   @Post()
   async createSubscription(
     @Body() createSubscriptionDto: CreateSubscriptionDto,
-    @Param('id', ParseIntPipe) id: number,
   ) {
     return await this.subscriptionService.createSubscription(
-      id,
       createSubscriptionDto,
     );
   }
@@ -39,9 +38,13 @@ export class SubscriptionController {
     return this.subscriptionService.findOne(+id);
   }
 
-  @Get(':id')
-  getUserSubscriptions(@Param('id') id: string) {
-    return this.subscriptionService.getSubscriptionsByUser(+id);
+@Get('user/:userId')
+  findUserSubscriptions(@Param() params: { userId: string }, @Query() query: { status?: string; limit?: number }) {
+    const { userId } = params;
+    return this.subscriptionService.findUserSubscriptions({
+      userId,
+      ...query
+    });
   }
 
   @Patch(':id')

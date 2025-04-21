@@ -1,5 +1,8 @@
 export class CreateMeetDto {
-  title: string;
+  userId: number;
+  serviceId: number;
   date: Date;
+  hour:string;
   place: string;
+  status: string;
 }

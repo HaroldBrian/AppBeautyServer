@@ -35,8 +35,8 @@ export class CreateServiceDto {
   image: any[];
 
   @IsNotEmpty()
-  userId: number;
+  shopId: number;
 
   @IsNotEmpty()
-  categoryId: number;
+  serviceCategoryId: number;
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
@@ -24,9 +24,13 @@ export class ShopController {
     return this.shopService.findOne(+id);
   }
 
-  @Get(':id')
-  findUserShops(@Param('id') id: string) {
-    return this.shopService.findUserShops(+id);
+  @Get('user/:userId')
+  findUserShops(@Param() params: { userId: string }, @Query() query: { status?: "active" | "inactive"; limit?: number }) {
+    const { userId } = params;
+    return this.shopService.findUserShops({
+      userId,
+      ...query
+    });
   }
 
   @Patch(':id')

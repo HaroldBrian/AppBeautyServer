@@ -1,9 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { MeetService } from './meet.service';
 import { CreateMeetDto } from './dto/create-meet.dto';
 import { UpdateMeetDto } from './dto/update-meet.dto';
 
-@Controller('meet')
 @Controller('api/v1/meet')
 export class MeetController {
   constructor(private readonly meetService: MeetService) {}
@@ -22,6 +21,15 @@ export class MeetController {
   findOne(@Param('id') id: string) {
     return this.meetService.findOne(+id);
   }
+
+  @Get('user/:userId')
+    findUserMeets(@Param() params: { userId: string }, @Query() query: { status?: string; limit?: number }) {
+      const { userId } = params;
+      return this.meetService.findUserMeets({
+        userId,
+        ...query
+      });
+    }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateMeetDto: UpdateMeetDto) {

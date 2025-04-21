@@ -1,0 +1,107 @@
+import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateShopDto } from './dto/create-shop.dto';
+import { UpdateShopDto } from './dto/update-shop.dto';
+export declare class ShopService {
+    private prisma;
+    constructor(prisma: PrismaService);
+    create(createShopDto: CreateShopDto): Promise<{
+        name: string;
+        description: string;
+        logo: string;
+        id: number;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
+        code: string;
+        images: import("@prisma/client/runtime/library").JsonValue;
+        userId: number;
+        location: string;
+        phoneNumber: string;
+        website: string;
+        socialNetworks: import("@prisma/client/runtime/library").JsonValue;
+    }>;
+    findAll(): Promise<{
+        name: string;
+        description: string;
+        logo: string;
+        id: number;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
+        code: string;
+        images: import("@prisma/client/runtime/library").JsonValue;
+        userId: number;
+        location: string;
+        phoneNumber: string;
+        website: string;
+        socialNetworks: import("@prisma/client/runtime/library").JsonValue;
+    }[]>;
+    findOne(id: number): Promise<{
+        name: string;
+        description: string;
+        logo: string;
+        id: number;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
+        code: string;
+        images: import("@prisma/client/runtime/library").JsonValue;
+        userId: number;
+        location: string;
+        phoneNumber: string;
+        website: string;
+        socialNetworks: import("@prisma/client/runtime/library").JsonValue;
+    }>;
+    findUserShops(query: {
+        userId: number | string;
+        status?: "active" | "inactive";
+        limit?: number | string;
+    }): Promise<{
+        name: string;
+        description: string;
+        logo: string;
+        id: number;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
+        code: string;
+        images: import("@prisma/client/runtime/library").JsonValue;
+        userId: number;
+        location: string;
+        phoneNumber: string;
+        website: string;
+        socialNetworks: import("@prisma/client/runtime/library").JsonValue;
+    }[]>;
+    update(id: number, updateShopDto: UpdateShopDto): Promise<{
+        name: string;
+        description: string;
+        logo: string;
+        id: number;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
+        code: string;
+        images: import("@prisma/client/runtime/library").JsonValue;
+        userId: number;
+        location: string;
+        phoneNumber: string;
+        website: string;
+        socialNetworks: import("@prisma/client/runtime/library").JsonValue;
+    }>;
+    delete(id: number): Promise<{
+        name: string;
+        description: string;
+        logo: string;
+        id: number;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
+        code: string;
+        images: import("@prisma/client/runtime/library").JsonValue;
+        userId: number;
+        location: string;
+        phoneNumber: string;
+        website: string;
+        socialNetworks: import("@prisma/client/runtime/library").JsonValue;
+    }>;
+}

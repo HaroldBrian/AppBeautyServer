@@ -17,6 +17,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
 import { PaymentsModule } from './payments/payments.module';
 import { MeetModule } from './meet/meet.module';
 import { OrderModule } from './order/order.module';
+import { RatingModule } from './rating/rating.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { OrderModule } from './order/order.module';
     SubscriptionModule,
     MeetModule,
     OrderModule,
+    RatingModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

@@ -7,6 +7,7 @@ import {
     Param,
     Post,
     Put,
+    Query,
     UploadedFiles,
     UseInterceptors,
 } from '@nestjs/common';
@@ -29,6 +30,24 @@ export class ServiceController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.service.findOne(+id);
+  }
+
+  @Get('shop/:shopId')
+  findShopServices(@Param() params: { shopId: string }, @Query() query: { isVisible?: boolean; limit?: number }) {
+    const { shopId } = params;
+    return this.service.findShopServices({
+      shopId,
+      ...query
+    });
+  }
+
+  @Get('category/:categoryId')
+  findcategoryServices(@Param() params: { categoryId: string }, @Query() query: { isVisible?: boolean; limit?: number }) {
+    const { categoryId } = params;
+    return this.service.findCategoryServices({
+      categoryId,
+      ...query
+    });
   }
 
   @Post()

@@ -15,16 +15,19 @@ model Country {
   label       String   @unique
   code        String   @unique
   description String?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
+
   towns       Town[]
 }
 
 model Town {
   id        Int      @id @default(autoincrement())
   label     String   @unique
-  country   Country  @relation(fields: [countryId], references: [id])
   countryId Int
+  country   Country  @relation(fields: [countryId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 }
@@ -44,13 +47,15 @@ model User {
   resetPasswordExpires DateTime?
   role                 Role      @default(CLIENT)
   status               Boolean   @default(false)
+
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @default(now()) @updatedAt
-  services             Service[]
 
   Subscription Subscription[]
   Shop         Shop[]
+  Meet         Meet[]
   Order        Order[]
+  Rating       Rating[]
 }
 
 enum Role {
@@ -62,10 +67,12 @@ enum Role {
 model ProductCategory {
   id          Int       @id @default(autoincrement())
   label       String    @unique
-  image       String?
   description String?
+  image       String?
+
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @default(now()) @updatedAt
+
   Product     Product[]
 }
 
@@ -73,13 +80,18 @@ model ServiceCategory {
   id          Int       @id @default(autoincrement())
   label       String    @unique
   description String?
+  image       String?
+
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @default(now()) @updatedAt
+
   services    Service[]
 }
 
 model Shop {
   id             Int       @id @default(autoincrement())
+  userId         Int
+  user           User      @relation(fields: [userId], references: [id])
   code           String
   name           String
   description    String?
@@ -88,34 +100,42 @@ model Shop {
   logo           String?
   website        String?
   status         String?
-  services       Service[]
   socialNetworks Json?
   images         Json?
+    
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now()) @updatedAt
+  
   Product        Product[]
-  userId         Int
-  user           User      @relation(fields: [userId], references: [id])
+  services       Service[]
 }
 
 model Service {
-  id          Int             @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
+  serviceCategoryId   Int
+  serviceCategory     ServiceCategory @relation(fields: [serviceCategoryId], references: [id])
+  shopId      Int
+  shop        Shop    @relation(fields: [shopId], references: [id])
   label       String
   description String?
   time        Int
   amount      Int
   discount    Int?
-  images      String?
-  caretype    ServiceCategory @relation(fields: [categoryId], references: [id])
-  categoryId  Int
-  user        User            @relation(fields: [userId], references: [id])
-  userId      Int
+  image       String?
+  isVisible   String?
+
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @default(now()) @updatedAt
-  Shop        Shop?           @relation(fields: [shopId], references: [id])
-  shopId      Int?
+
+  Meet         Meet[]
 }
 
 model Product {
   id                Int             @id @default(autoincrement())
+  shopId            Int
+  shop              Shop            @relation(fields: [shopId], references: [id])
+  productCategoryId Int
+  productCategory   ProductCategory @relation(fields: [productCategoryId], references: [id])
   name              String
   quantity          Int
   price             Float
@@ -123,10 +143,10 @@ model Product {
   images            Json
   description       String
   status            String
-  shopId            Int
-  shop              Shop            @relation(fields: [shopId], references: [id])
-  productCategoryId Int
-  productCategory   ProductCategory @relation(fields: [productCategoryId], references: [id])
+  
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now()) @updatedAt
+
   Order             Order[]
 }
 
@@ -136,6 +156,7 @@ model SubscriptionPlan {
   price       Float
   duration    Int
   description String?
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
 
@@ -145,45 +166,60 @@ model SubscriptionPlan {
 model Payment {
   id             Int       @id @default(autoincrement())
   subscriptionId Int
+  subscription Subscription @relation(fields: [subscriptionId], references: [id])
   amount         Float
   paymentDate    DateTime?
   status         String    @default("pending")
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
 
-  subscription Subscription @relation(fields: [subscriptionId], references: [id])
+  createdAt      DateTime  @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
 }
 
 model Subscription {
   id                 Int      @id @default(autoincrement())
   userId             Int
+  user               User             @relation(fields: [userId], references: [id])
   subscriptionPlanId Int
+  subscriptionPlan   SubscriptionPlan @relation(fields: [subscriptionPlanId], references: [id])
+  status             String
   startDate          DateTime @default(now())
   endDate            DateTime
-  status             String // e.g., "active", "inactive", "cancelled"
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
 
-  user             User             @relation(fields: [userId], references: [id])
-  subscriptionPlan SubscriptionPlan @relation(fields: [subscriptionPlanId], references: [id])
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @default(now()) @updatedAt
+
   payments         Payment[]
 }
 
 model Meet {
   id        Int      @id @default(autoincrement())
-  title     String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  serviceId Int
+  service   Service  @relation(fields: [serviceId], references: [id])
   date      DateTime
+  hour      String
   place     String
+  status    String
+
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
+
+  rating             Rating[]
 }
 
 model Rating {
   id        Int      @id @default(autoincrement())
+  userId Int
+  user   User  @relation(fields: [userId], references: [id])
+  meetId Int
+  meet   Meet  @relation(fields: [meetId], references: [id])
   notation  Int
   comment   String?
+
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Schedule {
@@ -191,20 +227,21 @@ model Schedule {
   event      String
   start_date DateTime
   end_date   DateTime
+
   createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  updatedAt  DateTime @default(now()) @updatedAt
 }
 
 model Order {
   id          String   @id @default(uuid())
   userId      Int
+  user    User    @relation(fields: [userId], references: [id])
   productId   Int
+  product Product @relation(fields: [productId], references: [id])
   quantity    Int
   totalAmount Float
   status      String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 
-  user    User    @relation(fields: [userId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 }

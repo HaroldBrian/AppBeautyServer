@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query } from '@nestjs/common';
 import { RatingService } from './rating.service';
 import { CreateRatingDto } from './dto/create-rating.dto';
 
-@Controller('rating')
 @Controller('api/v1/rating')
 export class RatingController {
   constructor(private readonly ratingService: RatingService) {}
@@ -21,6 +20,15 @@ export class RatingController {
   findOne(@Param('id') id: number) {
     return this.ratingService.findOne(id);
   }
+
+  @Get('user/:userId')
+    findUserRatings(@Param() params: { userId: string }, @Query() query: { status?: string; limit?: number }) {
+      const { userId } = params;
+      return this.ratingService.findUserRatings({
+        userId,
+        ...query
+      });
+    }
 
   @Put(':id')
   update(@Param('id') id: number, @Body() updateRatingDto: CreateRatingDto) {

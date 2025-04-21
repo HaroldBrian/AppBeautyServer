@@ -52,15 +52,50 @@ export class ShopService {
     });
   }
 
-  async findUserShops(userId: number){
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+  async findUserShops(query: {
+    userId: number | string;
+    status?: "active" | "inactive";
+    limit?: number | string;
+  }) {
+    let userId = Number(query.userId);
+
+    if (isNaN(userId) || userId <= 0) {
+      throw new HttpException('Invalid user ID', HttpStatus.BAD_REQUEST);
+    }
+  
+    const limit = query.limit ? Number(query.limit) : undefined;
+  
+    if (limit && (isNaN(limit) || limit <= 0)) {
+      throw new HttpException('Limit must be a positive number', HttpStatus.BAD_REQUEST);
+    }
+  
+    const filters: any = {
+      userId: userId,
+    };
+  
+    if (query.status) {
+      filters.status = query.status;
+    }
+  
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+  
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-
-    const shops = await this.prisma.shop.findMany({ where: { userId: user.id }})
+  
+    const shops = await this.prisma.shop.findMany({
+      where: filters,
+      take: limit,
+      orderBy: {
+        id: 'desc',
+      },
+    });
+  
     return shops;
   }
+  
 
   async update(id: number, updateShopDto: UpdateShopDto) {
     const item = await this.prisma.shop.findUnique({ where: { id } });

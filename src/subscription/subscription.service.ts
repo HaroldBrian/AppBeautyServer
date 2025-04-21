@@ -12,11 +12,10 @@ export class SubscriptionService {
   ) {}
 
   async createSubscription(
-    userId: number,
     createSubscriptionDto: CreateSubscriptionDto,
   ) {
     try {
-      const { subscriptionPlanId } = createSubscriptionDto;
+      const { userId, subscriptionPlanId } = createSubscriptionDto;
 
       // We Validate user and subscription plan existence
       const user = await this.prisma.user.findUnique({
@@ -27,12 +26,15 @@ export class SubscriptionService {
         where: { id: subscriptionPlanId },
       });
 
+      
       if (!user || !subscriptionPlan) {
+        console.log("user not found")
         throw new HttpException(
           'User or Subscription Plan not found',
           HttpStatus.NOT_FOUND,
         );
       }
+
 
       // -- Initiating payment
       const payment = await this.paymentService.initializePayment({
@@ -58,7 +60,9 @@ export class SubscriptionService {
       });
 
       return subscription;
-    } catch (error) {}
+    } catch (error) {
+      throw new HttpException('error => ', error) 
+    }
   }
 
   async findAll() {
@@ -77,21 +81,49 @@ export class SubscriptionService {
     });
   }
 
-  async getSubscriptionsByUser(userId: number) {
+  async findUserSubscriptions(query: {
+    userId: number | string;
+    status?: string;
+    limit?: number | string;
+  }) {
+    let userId = Number(query.userId);
 
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (isNaN(userId) || userId <= 0) {
+      throw new HttpException('Invalid user ID', HttpStatus.BAD_REQUEST);
+    }
+  
+    const limit = query.limit ? Number(query.limit) : undefined;
+  
+    if (limit && (isNaN(limit) || limit <= 0)) {
+      throw new HttpException('Limit must be a positive number', HttpStatus.BAD_REQUEST);
+    }
+  
+    const filters: any = {
+      userId: userId,
+    };
+  
+    if (query.status) {
+      filters.status = query.status;
+    }
+  
+    console.log("Filtres envoyés à Prisma :", filters);
+  
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+  
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-    
+  
     const subscriptions = await this.prisma.subscription.findMany({
-      where: { userId: user.id },
+      where: filters,
+      take: limit,
+      orderBy: {
+        id: 'desc',
+      },
     });
-
-    if (!subscriptions) {
-      throw new HttpException('No subscriptions found for this user', HttpStatus.NOT_FOUND);
-    }
-
+  
     return subscriptions;
   }
 
