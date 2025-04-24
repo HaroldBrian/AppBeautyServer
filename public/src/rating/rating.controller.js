@@ -88,7 +88,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], RatingController.prototype, "remove", null);
 exports.RatingController = RatingController = __decorate([
-    (0, common_1.Controller)('api/v1/rating'),
+    (0, common_1.Controller)('api/v1/ratings'),
     __metadata("design:paramtypes", [rating_service_1.RatingService])
 ], RatingController);
 //# sourceMappingURL=rating.controller.js.map

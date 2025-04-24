@@ -12,6 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MeetService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+const mailSender_1 = require("../../utils/mailSender");
+const path = require("path");
+const fs = require("fs");
 let MeetService = class MeetService {
     constructor(prisma) {
         this.prisma = prisma;
@@ -54,7 +57,26 @@ let MeetService = class MeetService {
         return meets;
     }
     async create(data) {
-        return this.prisma.meet.create({ data: { ...data } });
+        const service = await this.prisma.service.findUnique({
+            where: { id: data.serviceId },
+        });
+        if (!service) {
+            throw new common_1.HttpException('Service not found', common_1.HttpStatus.NOT_FOUND);
+        }
+        const shop = await this.prisma.shop.findUnique({
+            where: { id: service.shopId },
+        });
+        if (!service) {
+            throw new common_1.HttpException('Shop not found', common_1.HttpStatus.NOT_FOUND);
+        }
+        const user = await this.prisma.user.findUnique({
+            where: { id: shop.userId },
+        });
+        const createMeet = await this.prisma.meet.create({ data: { ...data } });
+        const templatePath = path.resolve(__dirname, '..', '..', '..', 'src', 'templates', 'meet-pending.html');
+        let template = fs.readFileSync(templatePath, 'utf8');
+        await (0, mailSender_1.mailSender)(user.email, 'Nouvelle demande de rendez-vous', template);
+        return createMeet;
     }
     async update(id, data) {
         return this.prisma.meet.update({ where: { id }, data });
@@ -65,7 +87,7 @@ let MeetService = class MeetService {
         });
         if (!data)
             throw new common_1.HttpException("There's no category with id " + id, common_1.HttpStatus.NOT_FOUND);
-        return this.prisma.serviceCategory.delete({ where: { id } });
+        return this.prisma.meet.delete({ where: { id } });
     }
 };
 exports.MeetService = MeetService;

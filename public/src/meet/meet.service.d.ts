@@ -64,11 +64,14 @@ export declare class MeetService {
         place: string;
     }>;
     remove(id: number): Promise<{
-        description: string;
         id: number;
+        status: string;
         createdAt: Date;
         updatedAt: Date;
-        label: string;
-        image: string;
+        userId: number;
+        serviceId: number;
+        date: Date;
+        hour: string;
+        place: string;
     }>;
 }

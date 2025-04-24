@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ServiceService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
-const storageUtils_1 = require("../../utils/storageUtils");
 let ServiceService = class ServiceService {
     constructor(prisma) {
         this.prisma = prisma;
@@ -93,7 +92,7 @@ let ServiceService = class ServiceService {
             serviceCategoryId: +serviceCategoryId,
             shopId: +shopId,
         };
-        const uploadedImages = await (0, storageUtils_1.storeImages)(image);
+        const uploadedImages = null;
         const createdService = await this.prisma.service.create({
             data: { ...parsedData, image: JSON.stringify(uploadedImages) },
         });

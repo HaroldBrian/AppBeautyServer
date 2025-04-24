@@ -65,11 +65,14 @@ export declare class MeetController {
         place: string;
     }>;
     remove(id: string): Promise<{
-        description: string;
         id: number;
+        status: string;
         createdAt: Date;
         updatedAt: Date;
-        label: string;
-        image: string;
+        userId: number;
+        serviceId: number;
+        date: Date;
+        hour: string;
+        place: string;
     }>;
 }

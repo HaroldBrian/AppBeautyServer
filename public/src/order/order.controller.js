@@ -83,8 +83,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], OrderController.prototype, "remove", null);
 exports.OrderController = OrderController = __decorate([
-    (0, common_1.Controller)('order'),
-    (0, common_1.Controller)('api/v1/order'),
+    (0, common_1.Controller)('api/v1/orders'),
     __metadata("design:paramtypes", [order_service_1.OrderService])
 ], OrderController);
 //# sourceMappingURL=order.controller.js.map

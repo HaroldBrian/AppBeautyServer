@@ -89,7 +89,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], MeetController.prototype, "remove", null);
 exports.MeetController = MeetController = __decorate([
-    (0, common_1.Controller)('api/v1/meet'),
+    (0, common_1.Controller)('api/v1/meets'),
     __metadata("design:paramtypes", [meet_service_1.MeetService])
 ], MeetController);
 //# sourceMappingURL=meet.controller.js.map

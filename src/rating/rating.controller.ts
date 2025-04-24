@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Param, Delete, Put, Query } from '@nestjs/
 import { RatingService } from './rating.service';
 import { CreateRatingDto } from './dto/create-rating.dto';
 
-@Controller('api/v1/rating')
+@Controller('api/v1/ratings')
 export class RatingController {
   constructor(private readonly ratingService: RatingService) {}
 

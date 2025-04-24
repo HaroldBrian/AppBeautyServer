@@ -3,7 +3,7 @@ import { MeetService } from './meet.service';
 import { CreateMeetDto } from './dto/create-meet.dto';
 import { UpdateMeetDto } from './dto/update-meet.dto';
 
-@Controller('api/v1/meet')
+@Controller('api/v1/meets')
 export class MeetController {
   constructor(private readonly meetService: MeetService) {}
 

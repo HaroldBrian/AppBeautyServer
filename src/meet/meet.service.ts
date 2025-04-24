@@ -2,6 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateMeetDto } from './dto/create-meet.dto';
 import { UpdateMeetDto } from './dto/update-meet.dto';
+import { mailSender } from 'utils/mailSender';
+import * as path from 'path';
+import * as fs from 'fs';
 
 @Injectable()
 export class MeetService {
@@ -62,7 +65,45 @@ export class MeetService {
   }
 
   async create(data: CreateMeetDto) {
-    return this.prisma.meet.create({ data: { ...data} });
+
+    // Sending message to confirm meet to shop user
+    const service = await this.prisma.service.findUnique({
+      where: { id: data.serviceId },
+    });
+  
+    if (!service) {
+      throw new HttpException('Service not found', HttpStatus.NOT_FOUND);
+    }
+
+    const shop = await this.prisma.shop.findUnique({
+      where: { id: service.shopId },
+    });
+
+    if (!service) {
+      throw new HttpException('Shop not found', HttpStatus.NOT_FOUND);
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: shop.userId },
+    });
+
+    const createMeet = await this.prisma.meet.create({ data: { ...data} });
+
+    const templatePath = path.resolve(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      'src',
+      'templates',
+      'meet-pending.html',
+    );
+    let template = fs.readFileSync(templatePath, 'utf8');
+
+    await mailSender(user.email, 'Nouvelle demande de rendez-vous', template);
+    // ending send message function
+
+    return createMeet;
   }
 
   async update(id: number, data: UpdateMeetDto) {
@@ -76,10 +117,10 @@ export class MeetService {
 
     if (!data)
       throw new HttpException(
-        "There's no category with id " + id,
+        "There's no meet with id " + id,
         HttpStatus.NOT_FOUND,
       );
 
-    return this.prisma.serviceCategory.delete({ where: { id } });
+    return this.prisma.meet.delete({ where: { id } });
   }
 }

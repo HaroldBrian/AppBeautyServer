@@ -118,7 +118,8 @@ export class ServiceService {
     };
     
 
-    const uploadedImages = await storeImages(image);
+    // const uploadedImages = await storeImages(image);
+    const uploadedImages = null;
 
     const createdService = await this.prisma.service.create({
       data: { ...parsedData, image: JSON.stringify(uploadedImages) },
