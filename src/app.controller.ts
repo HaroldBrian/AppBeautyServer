@@ -3,8 +3,8 @@ import { Controller, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
 
-@ApiTags("Health check API's")
-@Controller('/health')
+@ApiTags("beauty check API's")
+@Controller('/beauty')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
