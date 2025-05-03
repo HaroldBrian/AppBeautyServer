@@ -79,12 +79,16 @@ export class MeetService {
       where: { id: service.shopId },
     });
 
-    if (!service) {
+    if (!shop) {
       throw new HttpException('Shop not found', HttpStatus.NOT_FOUND);
     }
 
-    const user = await this.prisma.user.findUnique({
+    const userShop = await this.prisma.user.findUnique({
       where: { id: shop.userId },
+    });
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: data.userId },
     });
 
     const createMeet = await this.prisma.meet.create({ data: { ...data} });
@@ -100,6 +104,8 @@ export class MeetService {
     );
     let template = fs.readFileSync(templatePath, 'utf8');
 
+    await mailSender(userShop.email, 'Nouvelle demande de rendez-vous', template);
+
     await mailSender(user.email, 'Nouvelle demande de rendez-vous', template);
     // ending send message function
 
@@ -107,7 +113,49 @@ export class MeetService {
   }
 
   async update(id: number, data: UpdateMeetDto) {
-    return this.prisma.meet.update({ where: { id }, data });
+    const service = await this.prisma.service.findUnique({
+      where: { id: data.serviceId },
+    });
+  
+    if (!service) {
+      throw new HttpException('Service not found', HttpStatus.NOT_FOUND);
+    }
+
+    const shop = await this.prisma.shop.findUnique({
+      where: { id: service.shopId },
+    });
+
+    if (!shop) {
+      throw new HttpException('Shop not found', HttpStatus.NOT_FOUND);
+    }
+
+    const userShop = await this.prisma.user.findUnique({
+      where: { id: shop.userId },
+    });
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: data.userId },
+    });
+
+    const updateMeet = await this.prisma.meet.update({ where: { id }, data });
+
+    const templatePath = path.resolve(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      'src',
+      'templates',
+      'meet-update.html',
+    );
+    let template = fs.readFileSync(templatePath, 'utf8');
+
+    await mailSender(userShop.email, 'Un changement de rendez-vous', template);
+    
+    await mailSender(user.email, 'Un changement de rendez-vous', template);
+    // ending send message function
+
+    return updateMeet;
   }
 
   async remove(id: number) {
