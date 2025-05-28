@@ -951,17 +951,6 @@
     webpack "5.89.0"
     webpack-node-externals "3.0.0"
 
-"@nestjs/common@^10.0.0":
-  version "10.3.1"
-  resolved "https://registry.npmjs.org/@nestjs/common/-/common-10.3.1.tgz"
-  integrity sha512-YuxeIlVemVQCuXMkNbBpNlmwZgp/Cu6dwCOjki63mhyYHEFX48GNNA4zZn5MFRjF4h7VSceABsScROuzsxs9LA==
-  dependencies:
-    uid "2.0.2"
-    iterare "1.2.1"
-    tslib "2.6.2"
-
-<<<<<<< HEAD
-=======
 "@nestjs/common@^11.1.2":
   version "11.1.2"
   resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-11.1.2.tgz#b4852a4cc99228955b1ee68c73e0538f8e39ae29"
@@ -982,7 +971,6 @@
     dotenv-expand "12.0.1"
     lodash "4.17.21"
 
->>>>>>> 1ba8c33e67367efdfb3a6dcbe0cec5fcb56a0d48
 "@nestjs/core@^10.0.0":
   version "10.3.1"
   resolved "https://registry.npmjs.org/@nestjs/core/-/core-10.3.1.tgz"
@@ -2354,7 +2342,8 @@ bcrypt@^5.1.1:
   version "0.0.1"
   dependencies:
     "@nestjs-modules/mailer" "^2.0.2"
-    "@nestjs/common" "^10.0.0"
+    "@nestjs/common" "^11.1.2"
+    "@nestjs/config" "^4.0.2"
     "@nestjs/core" "^10.0.0"
     "@nestjs/jwt" "^10.2.0"
     "@nestjs/passport" "^10.0.3"
@@ -2366,15 +2355,12 @@ bcrypt@^5.1.1:
     "@types/passport-local" "^1.0.38"
     axios "^1.7.7"
     bcrypt "^5.1.1"
-<<<<<<< HEAD
-    beautify "file:../../usr/local/share/.cache/yarn/v6/npm-beautify-0.0.1-c1bbacdf-7bb8-4069-b706-2a2df3c11f25-1748463483435/node_modules/beautify"
-=======
-    beautify "file:C:/Users/carelle otchouang/AppData/Local/Yarn/Cache/v6/npm-beautify-0.0.1-692159a3-6f56-4a0e-b4ea-0797cd017085-1748459945973/node_modules/beautify"
->>>>>>> 1ba8c33e67367efdfb3a6dcbe0cec5fcb56a0d48
+    beautify "file:../../usr/local/share/.cache/yarn/v6/npm-beautify-0.0.1-124c952e-4340-45d8-adf4-5ff8f10d2aef-1748466554835/node_modules/beautify"
     class-transformer "^0.5.1"
     class-validator "^0.14.1"
+    handlebars "^4.7.8"
     multer "^1.4.5-lts.1"
-    nodemailer "^6.9.13"
+    nodemailer "^7.0.3"
     otp-generator "^4.0.1"
     passport "^0.7.0"
     passport-jwt "^4.0.1"
@@ -3051,11 +3037,7 @@ debug@4, debug@^4.1.0, debug@^4.1.1, debug@^4.3.1, debug@^4.3.2, debug@^4.3.4:
   dependencies:
     ms "2.1.2"
 
-<<<<<<< HEAD
-debug@^4.3.6:
-=======
 debug@^4.3.6, debug@^4.4.0:
->>>>>>> 1ba8c33e67367efdfb3a6dcbe0cec5fcb56a0d48
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.4.1.tgz#e5a8bc6cbc4c6cd3e64308b0693a3d4fa550189b"
   integrity sha512-KcKCqiftBJcZr++7ykoDIEwSa3XWowTfNPo92BYxjXiyYEVrUQh2aLyhxBCwww+heortUFxEJYcRzosstTEBYQ==
@@ -3774,14 +3756,11 @@ fdir@^6.4.4:
   resolved "https://registry.yarnpkg.com/fdir/-/fdir-6.4.5.tgz#328e280f3a23699362f95f2e82acf978a0c0cb49"
   integrity sha512-4BG7puHpVsIYxZUbiUE3RqGloLaSSwzYie5jvasC4LWuBWzZawynvYouhjbQKw2JuIGYdm0DzIxl8iVidKlUEw==
 
-<<<<<<< HEAD
-=======
 fflate@^0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/fflate/-/fflate-0.8.2.tgz#fc8631f5347812ad6028bbe4a2308b2792aa1dea"
   integrity sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==
 
->>>>>>> 1ba8c33e67367efdfb3a6dcbe0cec5fcb56a0d48
 figures@^3.0.0:
   version "3.2.0"
   resolved "https://registry.npmjs.org/figures/-/figures-3.2.0.tgz"

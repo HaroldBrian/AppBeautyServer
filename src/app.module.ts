@@ -20,6 +20,7 @@ import { OrderModule } from './order/order.module';
 import { RatingModule } from './rating/rating.module';
 import { MailModule } from './mail/mail.module';
 import mailConfig from './mail/config/mail.config';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
