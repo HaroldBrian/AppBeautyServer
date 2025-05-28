@@ -18,9 +18,16 @@ import { PaymentsModule } from './payments/payments.module';
 import { MeetModule } from './meet/meet.module';
 import { OrderModule } from './order/order.module';
 import { RatingModule } from './rating/rating.module';
+import { MailModule } from './mail/mail.module';
+import mailConfig from './mail/config/mail.config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [mailConfig],
+    }),
+
     AuthModule,
     UsersModule,
     PrismaModule,
@@ -36,7 +43,8 @@ import { RatingModule } from './rating/rating.module';
     SubscriptionModule,
     MeetModule,
     OrderModule,
-    RatingModule
+    RatingModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

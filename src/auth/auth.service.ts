@@ -3,12 +3,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { compare, hash } from 'bcrypt';
-import * as fs from 'fs';
 import * as otpGenerator from 'otp-generator';
-import * as path from 'path';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoginDto, SignupDto } from 'src/users/users.dto';
-import { mailSender } from 'utils/mailSender';
+import { MailService } from 'src/mail/mail.service';
 import { VerifyOtpDto } from './auth.dto';
 import { JwtPayload } from './jwt.strategy';
 
@@ -21,6 +19,7 @@ export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
+    private readonly mailService: MailService,
   ) {}
 
   async registerProvider(userDto: SignupDto): Promise<RegistrationStatus> {
@@ -91,18 +90,17 @@ export class AuthService {
         },
       });
 
-      const templatePath = path.resolve(
-        __dirname,
-        '..',
-        '..',
-        '..',
-        'src',
-        'templates',
-        'otp-template.html',
+      // Envoi de l'email de Vérification
+      await this.mailService.sendMail(
+        user.email,
+        'Vérification de votre compte',
+        'email-otp',
+        {
+          name: `${user.name}`,
+          otpCode: otp,
+          expirationMinutes: 10,
+        },
       );
-      let template = fs.readFileSync(templatePath, 'utf8');
-      template = template.replace('{{OTP_CODE}}', otp);
-      await mailSender(userDto.email, 'Confirmation Code', template);
 
       status.data = user;
     } catch (err) {
@@ -137,18 +135,15 @@ export class AuthService {
       },
     });
 
-    const templatePath = path.resolve(
-      __dirname,
-      '..',
-      '..',
-      '..',
-      'src',
-      'templates',
-      'verification-success.html',
+    // Envoi de l'email de bienvenue
+    await this.mailService.sendMail(
+      user.email,
+      'Bienvenue sur TopNyanga',
+      'welcome',
+      {
+        name: `${user.name}`,
+      },
     );
-    let template = fs.readFileSync(templatePath, 'utf8');
-
-    await mailSender(email, 'Bienvenue', template);
 
     return { message: 'OTP verified successfully' };
   }
@@ -249,39 +244,38 @@ export class AuthService {
   }
 
   async forgotPassword(email: string): Promise<any> {
-      const user = await this.prisma.user.findFirst({ where: { email } });
-      if (!user) {
-        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-      }
+    const user = await this.prisma.user.findFirst({ where: { email } });
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
 
-      const otp = otpGenerator.generate(4, {
-        upperCaseAlphabets: false,
-        lowerCaseAlphabets: false,
-        specialChars: false,
-      });
+    const otp = otpGenerator.generate(4, {
+      upperCaseAlphabets: false,
+      lowerCaseAlphabets: false,
+      specialChars: false,
+    });
 
-      await this.prisma.user.update({
-        where: { email },
-        data: {
-          resetPasswordOtp: otp,
-          resetPasswordExpires: new Date(Date.now() + 3600000),
-        },
-      });
+    await this.prisma.user.update({
+      where: { email },
+      data: {
+        resetPasswordOtp: otp,
+        resetPasswordExpires: new Date(Date.now() + 3600000),
+      },
+    });
 
-      const templatePath = path.resolve(
-        __dirname,
-        '..',
-        '..',
-        '..',
-        'src',
-        'templates',
-        'otp-password.html',
-      );
-      let template = fs.readFileSync(templatePath, 'utf8');
-      template = template.replace('{{OTP_CODE}}', otp);
-      await mailSender(email, 'Password Reset Code', template);
-    
-      return { message: 'Reset OTP sent successfully' };
+    // Envoi de l'email de réinitialisation de mot de passe
+    await this.mailService.sendMail(
+      user.email,
+      'Réinitialisation de votre mot de passe',
+      'password-reset',
+      {
+        name: `${user.name}`,
+        otpCode: otp,
+        expirationMinutes: 10,
+      },
+    );
+
+    return { message: 'Reset OTP sent successfully' };
   }
 
   // --- forgot password OTP
@@ -313,7 +307,10 @@ export class AuthService {
     }
 
     if (!(await user).resetPasswordOtp) {
-      throw new HttpException('You need to follow the right process to reset your password', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'You need to follow the right process to reset your password',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const hashedPassword = await hash(newPasword, 10);
