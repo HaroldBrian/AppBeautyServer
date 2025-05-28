@@ -33,7 +33,7 @@ let MailService = MailService_1 = class MailService {
         this.registerPartials();
     }
     registerPartials() {
-        const partialsDir = path.join(__dirname, '..', '..', 'src', 'mail', 'templates', 'partials');
+        const partialsDir = path.join(__dirname, '..', '..', '..', 'src', 'mail', 'templates', 'partials');
         if (!fs.existsSync(partialsDir)) {
             this.logger.warn(`Le répertoire des partials est introuvable : ${partialsDir}`);
             return;
@@ -47,7 +47,7 @@ let MailService = MailService_1 = class MailService {
         });
     }
     async parseTemplate(templateName, context) {
-        const baseDir = path.join(__dirname, '..', '..', 'src', 'mail', 'templates');
+        const baseDir = path.join(__dirname, '..', '..', '..', 'src', 'mail', 'templates');
         const filePath = path.join(baseDir, `${templateName}.hbs`);
         if (!fs.existsSync(filePath)) {
             throw new Error(`Template file not found: ${filePath}`);

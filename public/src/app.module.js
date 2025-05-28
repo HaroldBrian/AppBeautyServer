@@ -29,13 +29,14 @@ const order_module_1 = require("./order/order.module");
 const rating_module_1 = require("./rating/rating.module");
 const mail_module_1 = require("./mail/mail.module");
 const mail_config_1 = require("./mail/config/mail.config");
+const config_1 = require("@nestjs/config");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            ConfigModule.forRoot({
+            config_1.ConfigModule.forRoot({
                 isGlobal: true,
                 load: [mail_config_1.default],
             }),

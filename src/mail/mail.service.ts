@@ -34,6 +34,7 @@ export class MailService {
       __dirname,
       '..',
       '..',
+      '..',
       'src',
       'mail',
       'templates',
@@ -62,6 +63,7 @@ export class MailService {
   ): Promise<string> {
     const baseDir = path.join(
       __dirname,
+      '..',
       '..',
       '..',
       'src',
