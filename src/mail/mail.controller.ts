@@ -2,7 +2,6 @@
 import {
   Controller,
   Post,
-  Get,
   Body,
   HttpException,
   HttpStatus,
@@ -10,11 +9,8 @@ import {
 } from '@nestjs/common';
 import { MailService } from './mail.service';
 import { SendMailDto, BulkMailDto } from './dto/mail.dto';
-import { AuthType } from 'src/iam/enums/auth-type.enum';
-import { Auth } from 'src/iam/decorators/auth.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
-@Auth(AuthType.Bearer)
 @Controller('mail')
 @ApiBearerAuth()
 export class MailController {
