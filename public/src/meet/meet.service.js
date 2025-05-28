@@ -66,27 +66,54 @@ let MeetService = class MeetService {
         const shop = await this.prisma.shop.findUnique({
             where: { id: service.shopId },
         });
-        if (!service) {
+        if (!shop) {
             throw new common_1.HttpException('Shop not found', common_1.HttpStatus.NOT_FOUND);
         }
-        const user = await this.prisma.user.findUnique({
+        const userShop = await this.prisma.user.findUnique({
             where: { id: shop.userId },
+        });
+        const user = await this.prisma.user.findUnique({
+            where: { id: data.userId },
         });
         const createMeet = await this.prisma.meet.create({ data: { ...data } });
         const templatePath = path.resolve(__dirname, '..', '..', '..', 'src', 'templates', 'meet-pending.html');
         let template = fs.readFileSync(templatePath, 'utf8');
+        await (0, mailSender_1.mailSender)(userShop.email, 'Nouvelle demande de rendez-vous', template);
         await (0, mailSender_1.mailSender)(user.email, 'Nouvelle demande de rendez-vous', template);
         return createMeet;
     }
     async update(id, data) {
-        return this.prisma.meet.update({ where: { id }, data });
+        const service = await this.prisma.service.findUnique({
+            where: { id: data.serviceId },
+        });
+        if (!service) {
+            throw new common_1.HttpException('Service not found', common_1.HttpStatus.NOT_FOUND);
+        }
+        const shop = await this.prisma.shop.findUnique({
+            where: { id: service.shopId },
+        });
+        if (!shop) {
+            throw new common_1.HttpException('Shop not found', common_1.HttpStatus.NOT_FOUND);
+        }
+        const userShop = await this.prisma.user.findUnique({
+            where: { id: shop.userId },
+        });
+        const user = await this.prisma.user.findUnique({
+            where: { id: data.userId },
+        });
+        const updateMeet = await this.prisma.meet.update({ where: { id }, data });
+        const templatePath = path.resolve(__dirname, '..', '..', '..', 'src', 'templates', 'meet-update.html');
+        let template = fs.readFileSync(templatePath, 'utf8');
+        await (0, mailSender_1.mailSender)(userShop.email, 'Un changement de rendez-vous', template);
+        await (0, mailSender_1.mailSender)(user.email, 'Un changement de rendez-vous', template);
+        return updateMeet;
     }
     async remove(id) {
         const data = await this.prisma.meet.findUnique({
             where: { id },
         });
         if (!data)
-            throw new common_1.HttpException("There's no category with id " + id, common_1.HttpStatus.NOT_FOUND);
+            throw new common_1.HttpException("There's no meet with id " + id, common_1.HttpStatus.NOT_FOUND);
         return this.prisma.meet.delete({ where: { id } });
     }
 };
