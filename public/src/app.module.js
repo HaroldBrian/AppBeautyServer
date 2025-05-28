@@ -27,12 +27,18 @@ const payments_module_1 = require("./payments/payments.module");
 const meet_module_1 = require("./meet/meet.module");
 const order_module_1 = require("./order/order.module");
 const rating_module_1 = require("./rating/rating.module");
+const mail_module_1 = require("./mail/mail.module");
+const mail_config_1 = require("./mail/config/mail.config");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            ConfigModule.forRoot({
+                isGlobal: true,
+                load: [mail_config_1.default],
+            }),
             auth_module_1.AuthModule,
             users_module_1.UsersModule,
             prisma_module_1.PrismaModule,
@@ -48,7 +54,8 @@ exports.AppModule = AppModule = __decorate([
             subscription_module_1.SubscriptionModule,
             meet_module_1.MeetModule,
             order_module_1.OrderModule,
-            rating_module_1.RatingModule
+            rating_module_1.RatingModule,
+            mail_module_1.MailModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService, prisma_service_1.PrismaService],

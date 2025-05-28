@@ -2,6 +2,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { LoginDto, SignupDto } from 'src/users/users.dto';
+import { MailService } from 'src/mail/mail.service';
 import { VerifyOtpDto } from './auth.dto';
 import { JwtPayload } from './jwt.strategy';
 interface FormatLogin extends Partial<User> {
@@ -10,7 +11,8 @@ interface FormatLogin extends Partial<User> {
 export declare class AuthService {
     private readonly prisma;
     private readonly jwtService;
-    constructor(prisma: PrismaService, jwtService: JwtService);
+    private readonly mailService;
+    constructor(prisma: PrismaService, jwtService: JwtService, mailService: MailService);
     registerProvider(userDto: SignupDto): Promise<RegistrationStatus>;
     registerCustomer(userDto: SignupDto): Promise<RegistrationStatus>;
     verifyOtp(verifyOtpDto: VerifyOtpDto): Promise<any>;

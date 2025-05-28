@@ -13,15 +13,14 @@ exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const bcrypt_1 = require("bcrypt");
-const fs = require("fs");
 const otpGenerator = require("otp-generator");
-const path = require("path");
 const prisma_service_1 = require("../prisma/prisma.service");
-const mailSender_1 = require("../../utils/mailSender");
+const mail_service_1 = require("../mail/mail.service");
 let AuthService = class AuthService {
-    constructor(prisma, jwtService) {
+    constructor(prisma, jwtService, mailService) {
         this.prisma = prisma;
         this.jwtService = jwtService;
+        this.mailService = mailService;
     }
     async registerProvider(userDto) {
         let status = {
@@ -77,10 +76,11 @@ let AuthService = class AuthService {
                     otp,
                 },
             });
-            const templatePath = path.resolve(__dirname, '..', '..', '..', 'src', 'templates', 'otp-template.html');
-            let template = fs.readFileSync(templatePath, 'utf8');
-            template = template.replace('{{OTP_CODE}}', otp);
-            await (0, mailSender_1.mailSender)(userDto.email, 'Confirmation Code', template);
+            await this.mailService.sendMail(user.email, 'Vérification de votre compte', 'email-otp', {
+                name: `${user.name}`,
+                otpCode: otp,
+                expirationMinutes: 10,
+            });
             status.data = user;
         }
         catch (err) {
@@ -109,9 +109,9 @@ let AuthService = class AuthService {
                 status: true,
             },
         });
-        const templatePath = path.resolve(__dirname, '..', '..', '..', 'src', 'templates', 'verification-success.html');
-        let template = fs.readFileSync(templatePath, 'utf8');
-        await (0, mailSender_1.mailSender)(email, 'Bienvenue', template);
+        await this.mailService.sendMail(user.email, 'Bienvenue sur TopNyanga', 'welcome', {
+            name: `${user.name}`,
+        });
         return { message: 'OTP verified successfully' };
     }
     async registerAdmin(userDto) {
@@ -204,10 +204,11 @@ let AuthService = class AuthService {
                 resetPasswordExpires: new Date(Date.now() + 3600000),
             },
         });
-        const templatePath = path.resolve(__dirname, '..', '..', '..', 'src', 'templates', 'otp-password.html');
-        let template = fs.readFileSync(templatePath, 'utf8');
-        template = template.replace('{{OTP_CODE}}', otp);
-        await (0, mailSender_1.mailSender)(email, 'Password Reset Code', template);
+        await this.mailService.sendMail(user.email, 'Réinitialisation de votre mot de passe', 'password-reset', {
+            name: `${user.name}`,
+            otpCode: otp,
+            expirationMinutes: 10,
+        });
         return { message: 'Reset OTP sent successfully' };
     }
     async verifyForgotPasswordOtp(email, otp) {
@@ -249,6 +250,7 @@ exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
-        jwt_1.JwtService])
+        jwt_1.JwtService,
+        mail_service_1.MailService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

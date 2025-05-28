@@ -1,4 +1,3 @@
-import { UsersService } from './../users/users.service';
 /* eslint-disable prettier/prettier */
 import {
   Body,
@@ -15,10 +14,7 @@ import { AuthService, RegistrationStatus } from './auth.service';
 @ApiTags('Authentication flow')
 @Controller('api/v1/auth')
 export class AuthController {
-  constructor(
-    private readonly authService: AuthService,
-
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('signup/admin')
   public async registerAdmin(
@@ -72,7 +68,9 @@ export class AuthController {
   }
 
   @Post('password-otp')
-  public async verifyForgotPasswordOtp(@Body() data: VerifyOtpDto): Promise<any> {
+  public async verifyForgotPasswordOtp(
+    @Body() data: VerifyOtpDto,
+  ): Promise<any> {
     return await this.authService.verifyForgotPasswordOtp(data.email, data.otp);
   }
 
