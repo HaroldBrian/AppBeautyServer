@@ -40,7 +40,7 @@ let MeetService = class MeetService {
         if (query.status) {
             filters.status = query.status;
         }
-        console.log("Filtres envoyés à Prisma :", filters);
+        console.log('Filtres envoyés à Prisma :', filters);
         const user = await this.prisma.user.findUnique({
             where: { id: userId },
         });
@@ -83,8 +83,15 @@ let MeetService = class MeetService {
         return createMeet;
     }
     async update(id, data) {
+        const existingMeet = await this.prisma.meet.findUnique({
+            where: { id },
+        });
+        if (!existingMeet) {
+            throw new common_1.HttpException('Meet not found', common_1.HttpStatus.NOT_FOUND);
+        }
+        const serviceId = data.serviceId || existingMeet.serviceId;
         const service = await this.prisma.service.findUnique({
-            where: { serviceId: data.serviceId },
+            where: { id: serviceId },
         });
         if (!service) {
             throw new common_1.HttpException('Service not found', common_1.HttpStatus.NOT_FOUND);
@@ -98,8 +105,9 @@ let MeetService = class MeetService {
         const userShop = await this.prisma.user.findUnique({
             where: { id: shop.userId },
         });
+        const userId = data.userId || existingMeet.userId;
         const user = await this.prisma.user.findUnique({
-            where: { id: data.userId },
+            where: { id: userId },
         });
         const updateMeet = await this.prisma.meet.update({ where: { id }, data });
         const templatePath = path.resolve(__dirname, '..', '..', '..', 'src', 'templates', 'meet-update.html');

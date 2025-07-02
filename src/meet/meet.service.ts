@@ -28,31 +28,34 @@ export class MeetService {
     if (isNaN(userId) || userId <= 0) {
       throw new HttpException('Invalid user ID', HttpStatus.BAD_REQUEST);
     }
-  
+
     const limit = query.limit ? Number(query.limit) : undefined;
-  
+
     if (limit && (isNaN(limit) || limit <= 0)) {
-      throw new HttpException('Limit must be a positive number', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Limit must be a positive number',
+        HttpStatus.BAD_REQUEST,
+      );
     }
-  
+
     const filters: any = {
       userId: userId,
     };
-  
+
     if (query.status) {
       filters.status = query.status;
     }
-  
-    console.log("Filtres envoyés à Prisma :", filters);
-  
+
+    console.log('Filtres envoyés à Prisma :', filters);
+
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
     });
-  
+
     if (!user) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-  
+
     const meets = await this.prisma.meet.findMany({
       where: filters,
       take: limit,
@@ -60,17 +63,16 @@ export class MeetService {
         id: 'desc',
       },
     });
-  
+
     return meets;
   }
 
   async create(data: CreateMeetDto) {
-
     // Sending message to confirm meet to shop user
     const service = await this.prisma.service.findUnique({
       where: { id: data.serviceId },
     });
-  
+
     if (!service) {
       throw new HttpException('Service not found', HttpStatus.NOT_FOUND);
     }
@@ -91,7 +93,7 @@ export class MeetService {
       where: { id: data.userId },
     });
 
-    const createMeet = await this.prisma.meet.create({ data: { ...data} });
+    const createMeet = await this.prisma.meet.create({ data: { ...data } });
 
     const templatePath = path.resolve(
       __dirname,
@@ -104,7 +106,11 @@ export class MeetService {
     );
     let template = fs.readFileSync(templatePath, 'utf8');
 
-    await mailSender(userShop.email, 'Nouvelle demande de rendez-vous', template);
+    await mailSender(
+      userShop.email,
+      'Nouvelle demande de rendez-vous',
+      template,
+    );
 
     await mailSender(user.email, 'Nouvelle demande de rendez-vous', template);
     // ending send message function
@@ -113,10 +119,22 @@ export class MeetService {
   }
 
   async update(id: number, data: UpdateMeetDto) {
-    const service = await this.prisma.service.findUnique({
-      where: { serviceId: data.serviceId },
+    // Récupérer d'abord le rendez-vous existant
+    const existingMeet = await this.prisma.meet.findUnique({
+      where: { id },
     });
-  
+
+    if (!existingMeet) {
+      throw new HttpException('Meet not found', HttpStatus.NOT_FOUND);
+    }
+
+    // Utiliser le serviceId du rendez-vous existant ou celui fourni dans data
+    const serviceId = data.serviceId || existingMeet.serviceId;
+
+    const service = await this.prisma.service.findUnique({
+      where: { id: serviceId },
+    });
+
     if (!service) {
       throw new HttpException('Service not found', HttpStatus.NOT_FOUND);
     }
@@ -133,8 +151,11 @@ export class MeetService {
       where: { id: shop.userId },
     });
 
+    // Utiliser le userId du rendez-vous existant ou celui fourni dans data
+    const userId = data.userId || existingMeet.userId;
+
     const user = await this.prisma.user.findUnique({
-      where: { id: data.userId },
+      where: { id: userId },
     });
 
     const updateMeet = await this.prisma.meet.update({ where: { id }, data });
@@ -151,7 +172,7 @@ export class MeetService {
     let template = fs.readFileSync(templatePath, 'utf8');
 
     await mailSender(userShop.email, 'Modification de rendez-vous', template);
-    
+
     await mailSender(user.email, 'Modification de rendez-vous', template);
     // ending send message function
 
