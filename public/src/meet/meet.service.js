@@ -84,7 +84,7 @@ let MeetService = class MeetService {
     }
     async update(id, data) {
         const service = await this.prisma.service.findUnique({
-            where: { id: data.serviceId },
+            where: { serviceId: data.serviceId },
         });
         if (!service) {
             throw new common_1.HttpException('Service not found', common_1.HttpStatus.NOT_FOUND);
@@ -104,8 +104,8 @@ let MeetService = class MeetService {
         const updateMeet = await this.prisma.meet.update({ where: { id }, data });
         const templatePath = path.resolve(__dirname, '..', '..', '..', 'src', 'templates', 'meet-update.html');
         let template = fs.readFileSync(templatePath, 'utf8');
-        await (0, mailSender_1.mailSender)(userShop.email, 'Un changement de rendez-vous', template);
-        await (0, mailSender_1.mailSender)(user.email, 'Un changement de rendez-vous', template);
+        await (0, mailSender_1.mailSender)(userShop.email, 'Modification de rendez-vous', template);
+        await (0, mailSender_1.mailSender)(user.email, 'Modification de rendez-vous', template);
         return updateMeet;
     }
     async remove(id) {

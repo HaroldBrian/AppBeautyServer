@@ -114,7 +114,7 @@ export class MeetService {
 
   async update(id: number, data: UpdateMeetDto) {
     const service = await this.prisma.service.findUnique({
-      where: { id: data.serviceId },
+      where: { serviceId: data.serviceId },
     });
   
     if (!service) {
@@ -150,9 +150,9 @@ export class MeetService {
     );
     let template = fs.readFileSync(templatePath, 'utf8');
 
-    await mailSender(userShop.email, 'Un changement de rendez-vous', template);
+    await mailSender(userShop.email, 'Modification de rendez-vous', template);
     
-    await mailSender(user.email, 'Un changement de rendez-vous', template);
+    await mailSender(user.email, 'Modification de rendez-vous', template);
     // ending send message function
 
     return updateMeet;
