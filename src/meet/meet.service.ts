@@ -113,9 +113,12 @@ export class MeetService {
   }
 
   async update(id: number, data: UpdateMeetDto) {
+    console.log("data =>", data)
     const service = await this.prisma.service.findUnique({
-      where: { serviceId: data.serviceId },
+      where: { id: data.serviceId },
     });
+
+    console.log('service =>', service);
   
     if (!service) {
       throw new HttpException('Service not found', HttpStatus.NOT_FOUND);

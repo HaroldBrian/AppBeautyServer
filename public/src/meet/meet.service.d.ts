@@ -6,25 +6,25 @@ export declare class MeetService {
     constructor(prisma: PrismaService);
     findAll(): Promise<{
         id: number;
-        status: string;
-        createdAt: Date;
-        updatedAt: Date;
         userId: number;
         serviceId: number;
         date: Date;
         hour: string;
         place: string;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
     }[]>;
     findOne(id: number): Promise<{
         id: number;
-        status: string;
-        createdAt: Date;
-        updatedAt: Date;
         userId: number;
         serviceId: number;
         date: Date;
         hour: string;
         place: string;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     findUserMeets(query: {
         userId: number | string;
@@ -32,46 +32,46 @@ export declare class MeetService {
         limit?: number | string;
     }): Promise<{
         id: number;
-        status: string;
-        createdAt: Date;
-        updatedAt: Date;
         userId: number;
         serviceId: number;
         date: Date;
         hour: string;
         place: string;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
     }[]>;
     create(data: CreateMeetDto): Promise<{
         id: number;
-        status: string;
-        createdAt: Date;
-        updatedAt: Date;
         userId: number;
         serviceId: number;
         date: Date;
         hour: string;
         place: string;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     update(id: number, data: UpdateMeetDto): Promise<{
         id: number;
-        status: string;
-        createdAt: Date;
-        updatedAt: Date;
         userId: number;
         serviceId: number;
         date: Date;
         hour: string;
         place: string;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     remove(id: number): Promise<{
         id: number;
-        status: string;
-        createdAt: Date;
-        updatedAt: Date;
         userId: number;
         serviceId: number;
         date: Date;
         hour: string;
         place: string;
+        status: string;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
 }
